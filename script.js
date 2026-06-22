@@ -325,16 +325,16 @@ function initNeuralNetwork() {
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
 
-    // Configuration
+    // Configuration - cleaner, less noisy
     const config = {
-        nodeCount: 50,
-        connectionDistance: 250,
+        nodeCount: 30,
+        connectionDistance: 220,
         mouseInfluence: 180,
-        nodeSpeed: 0.8,
+        nodeSpeed: 0.5,
         minNodeSize: 2,
-        maxNodeSize: 5,
-        connectionOpacity: 0.2,
-        particleCount: 15
+        maxNodeSize: 4,
+        connectionOpacity: 0.15,
+        particleCount: 8
     };
 
     let mouse = { x: null, y: null, radius: config.mouseInfluence };
@@ -404,37 +404,24 @@ function initNeuralNetwork() {
         }
 
         draw() {
-            // Main node with enhanced glow
+            // Main node - cleaner, less glow
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(0, 102, 255, ${this.brightness})`;
+            ctx.fillStyle = `rgba(0, 102, 255, ${this.brightness * 0.8})`;
             ctx.fill();
 
-            // Multi-layer glow effect
-            const gradient1 = ctx.createRadialGradient(
+            // Single subtle glow
+            const gradient = ctx.createRadialGradient(
                 this.x, this.y, 0,
-                this.x, this.y, this.radius * 4
+                this.x, this.y, this.radius * 3
             );
-            gradient1.addColorStop(0, `rgba(0, 102, 255, ${0.4 * this.brightness})`);
-            gradient1.addColorStop(0.5, `rgba(0, 102, 255, ${0.2 * this.brightness})`);
-            gradient1.addColorStop(1, 'rgba(0, 102, 255, 0)');
+            gradient.addColorStop(0, `rgba(0, 102, 255, ${0.3 * this.brightness})`);
+            gradient.addColorStop(0.7, `rgba(0, 102, 255, ${0.1 * this.brightness})`);
+            gradient.addColorStop(1, 'rgba(0, 102, 255, 0)');
 
             ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius * 4, 0, Math.PI * 2);
-            ctx.fillStyle = gradient1;
-            ctx.fill();
-
-            // Outer glow
-            const gradient2 = ctx.createRadialGradient(
-                this.x, this.y, 0,
-                this.x, this.y, this.radius * 8
-            );
-            gradient2.addColorStop(0, `rgba(0, 153, 255, ${0.15 * this.brightness})`);
-            gradient2.addColorStop(1, 'rgba(0, 153, 255, 0)');
-
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius * 8, 0, Math.PI * 2);
-            ctx.fillStyle = gradient2;
+            ctx.arc(this.x, this.y, this.radius * 3, 0, Math.PI * 2);
+            ctx.fillStyle = gradient;
             ctx.fill();
         }
     }
@@ -603,7 +590,97 @@ function initLazyLoad() {
 }
 
 // ============================================
-// 13. INITIALIZE ALL
+// 13. FLOATING SECTION NAVIGATION
+// ============================================
+
+function initSectionNavigation() {
+    const sectionNav = document.querySelector('.section-nav');
+    const navDots = document.querySelectorAll('.section-nav-dot');
+    const sections = document.querySelectorAll('.hero, .section');
+
+    if (!sectionNav || navDots.length === 0) return;
+
+    // Show navigation after scrolling past hero
+    function updateNavVisibility() {
+        const scrollY = window.pageYOffset;
+        const heroHeight = document.querySelector('.hero').offsetHeight;
+
+        if (scrollY > heroHeight * 0.3) {
+            sectionNav.classList.add('visible');
+        } else {
+            sectionNav.classList.remove('visible');
+        }
+    }
+
+    // Update active dot based on scroll position
+    function updateActiveSection() {
+        const scrollY = window.pageYOffset;
+        const windowHeight = window.innerHeight;
+
+        let currentSection = null;
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            const sectionId = section.getAttribute('id');
+
+            // Check if section is in viewport
+            if (scrollY >= sectionTop - windowHeight / 3 &&
+                scrollY < sectionTop + sectionHeight - windowHeight / 3) {
+                currentSection = sectionId;
+            }
+        });
+
+        // Update active state
+        navDots.forEach(dot => {
+            const dotSection = dot.getAttribute('data-section');
+            if (dotSection === currentSection) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    }
+
+    // Smooth scroll to section on click
+    navDots.forEach(dot => {
+        dot.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+
+            if (targetSection) {
+                const navHeight = document.querySelector('.nav').offsetHeight;
+                const targetPosition = targetSection.offsetTop - navHeight - 20;
+
+                window.scrollTo({
+                    top: targetId === '#hero' ? 0 : targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Throttled scroll handler for performance
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+        if (scrollTimeout) {
+            window.cancelAnimationFrame(scrollTimeout);
+        }
+
+        scrollTimeout = window.requestAnimationFrame(() => {
+            updateNavVisibility();
+            updateActiveSection();
+        });
+    });
+
+    // Initial update
+    updateNavVisibility();
+    updateActiveSection();
+}
+
+// ============================================
+// 14. INITIALIZE ALL
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -635,6 +712,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize smooth scroll (works regardless of motion preference)
     initSmoothScroll();
     initLazyLoad();
+    initSectionNavigation();
 
     // Console signature
     console.log('%c VP ', 'background: #000; color: #fff; padding: 12px 20px; font-family: monospace; font-size: 20px; font-weight: bold;');
