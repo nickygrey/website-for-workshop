@@ -3,37 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vyacheslav — AI Product Manager</title>
+    <title>Vyacheslav Plotnikov — AI Product Manager</title>
+    <meta name="description" content="AI Product Manager specializing in building intelligent systems with elegant architecture.">
+    <meta name="author" content="Vyacheslav Plotnikov">
+    <!-- Add favicon: <link rel="icon" href="favicon.ico"> -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
+    <!-- Animated Mesh Gradient Background -->
+    <div class="mesh-gradient"></div>
+
     <!-- Navigation -->
     <nav class="nav">
-        <a href="#about">About</a>
-        <a href="#work">Work</a>
-        <a href="#contact">Contact</a>
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">VP</a>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#work">Work</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
     </nav>
 
     <!-- Hero Section -->
     <section id="hero" class="hero">
-        <h1 class="hero-title" data-animate="kinetic">
-            <span class="line">Building intelligent products</span>
-            <span class="line">that feel intentional,</span>
-            <span class="line">technically elegant,</span>
-            <span class="line">and deeply human.</span>
-        </h1>
-        <p class="hero-subtitle" data-animate="fade-up">AI Product Manager</p>
+        <div class="hero-content">
+            <h1 class="hero-title animate-on-load">
+                Building intelligent products<br>
+                that feel intentional,<br>
+                technically elegant,<br>
+                and deeply human.
+            </h1>
+            <p class="hero-subtitle animate-on-load delay-200">AI Product Manager</p>
+            <a href="#work" class="cta-button animate-on-load delay-300">View My Work</a>
+        </div>
     </section>
 
     <!-- About Section -->
     <section id="about" class="section about">
         <div class="container">
-            <h2 class="section-title" data-animate="fade-in">About</h2>
+            <h2 class="section-title reveal-curtain">About</h2>
             <div class="about-content">
-                <p data-animate="fade-up" data-delay="0">I'm an AI Product Manager who believes technical architecture should be as elegant as it is functional.</p>
-                <p data-animate="fade-up" data-delay="100">I specialize in building intelligent systems that solve complex problems with clarity and precision. From conversational AI to machine learning pipelines, I translate technical complexity into products that teams can build and users can understand.</p>
-                <p data-animate="fade-up" data-delay="200">My approach combines rigorous technical thinking with obsessive attention to detail. I help teams ship AI products that work reliably, scale intelligently, and feel inevitable in their simplicity.</p>
+                <div class="content-card reveal-curtain">
+                    <p>I'm an AI Product Manager who believes technical architecture should be as elegant as it is functional.</p>
+                    <p>I specialize in building intelligent systems that solve complex problems with clarity and precision. From conversational AI to machine learning pipelines, I translate technical complexity into products that teams can build and users can understand.</p>
+                    <p>My approach combines rigorous technical thinking with obsessive attention to detail. I help teams ship AI products that work reliably, scale intelligently, and feel inevitable in their simplicity.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -41,28 +57,39 @@
     <!-- Work Section -->
     <section id="work" class="section work">
         <div class="container">
-            <h2 class="section-title" data-animate="fade-in">Selected Work</h2>
-
-            <!-- Add your projects here -->
-            <p class="work-empty" data-animate="fade-up">Projects coming soon.</p>
-
+            <h2 class="section-title reveal-curtain">Selected Work</h2>
+            <div class="work-grid">
+                <!-- Project cards will be added here -->
+                <div class="project-card reveal-curtain">
+                    <div class="project-content">
+                        <span class="project-label">Coming Soon</span>
+                        <h3 class="project-title">AI Product Case Studies</h3>
+                        <p class="project-description">Detailed breakdowns of intelligent systems I've built and shipped.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Contact Section -->
     <section id="contact" class="section contact">
         <div class="container">
-            <h2 class="section-title" data-animate="fade-in">Contact</h2>
-            <p class="contact-text" data-animate="fade-up">
-                For AI product collaboration, consulting, or speaking engagements.
-            </p>
-            <a href="mailto:your.email@example.com" class="email-link" data-animate="glitch">your.email@example.com</a>
+            <h2 class="section-title reveal-curtain">Get in Touch</h2>
+            <div class="contact-content reveal-curtain">
+                <p class="contact-text">
+                    Available for AI product collaboration, consulting, and speaking engagements.
+                </p>
+                <a href="mailto:your.email@example.com" class="cta-button">your.email@example.com</a>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2026 Vyacheslav. All rights reserved.</p>
+        <div class="container">
+            <div class="footer-brand">VP</div>
+            <p>&copy; 2026 Vyacheslav Plotnikov. All rights reserved.</p>
+        </div>
     </footer>
 
     <script src="script.js"></script>

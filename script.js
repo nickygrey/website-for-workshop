@@ -1,119 +1,120 @@
 /* ===================================
-   KINETIC TYPOGRAPHY PORTFOLIO
-   Advanced Text Animations
+   MODERN PORTFOLIO
+   Subtle Motion & Interactions
    =================================== */
 
-// Wait for DOM to be ready
-document.addEventListener('DOMContentLoaded', function() {
+// ============================================
+// 1. PAGE LOAD STAGGERED ANIMATIONS
+// ============================================
 
-    // ============================================
-    // 1. HERO TITLE CHARACTER ANIMATION
-    // ============================================
-
-    function splitTextToChars() {
-        const heroTitle = document.querySelector('.hero-title[data-animate="kinetic"]');
-        if (!heroTitle) return;
-
-        const lines = heroTitle.querySelectorAll('.line');
-
-        lines.forEach((line, lineIndex) => {
-            const text = line.textContent;
-            line.textContent = '';
-
-            // Split text into characters
-            text.split('').forEach((char, charIndex) => {
-                const span = document.createElement('span');
-                span.className = 'char';
-                span.textContent = char === ' ' ? '\u00A0' : char; // Preserve spaces
-
-                // Calculate stagger delay
-                const totalDelay = (lineIndex * 100) + (charIndex * 30);
-                span.style.animationDelay = `${totalDelay}ms`;
-
-                line.appendChild(span);
-            });
+function initPageLoadAnimations() {
+    // Trigger animations after brief delay for impact
+    setTimeout(() => {
+        const animatedElements = document.querySelectorAll('.animate-on-load');
+        animatedElements.forEach(element => {
+            element.classList.add('loaded');
         });
-    }
+    }, 100);
+}
 
-    function animateHeroTitle() {
-        const chars = document.querySelectorAll('.hero-title .char');
+// ============================================
+// 2. CURTAIN LIFT SCROLL REVEALS
+// ============================================
 
-        // Trigger animation by adding class
-        chars.forEach(char => {
-            char.classList.add('animate');
-        });
-
-        // Animate subtitle after title completes
-        const subtitle = document.querySelector('.hero-subtitle[data-animate="fade-up"]');
-        if (subtitle) {
-            setTimeout(() => {
-                subtitle.classList.add('animated');
-            }, 1200); // Delay until most of title is visible
-        }
-    }
-
-    // Initialize hero animation
-    splitTextToChars();
-    setTimeout(animateHeroTitle, 300); // Small delay for dramatic effect
-
-
-    // ============================================
-    // 2. SCROLL-TRIGGERED ANIMATIONS
-    // ============================================
+function initCurtainReveal() {
+    const revealElements = document.querySelectorAll('.reveal-curtain');
 
     const observerOptions = {
         threshold: 0.15,
         rootMargin: '0px 0px -100px 0px'
     };
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
             if (entry.isIntersecting) {
-                const element = entry.target;
-                const delay = element.getAttribute('data-delay') || 0;
-
+                // Slight stagger for multiple elements in same section
                 setTimeout(() => {
-                    element.classList.add('animated');
-                }, parseInt(delay));
+                    entry.target.classList.add('revealed');
+                }, index * 100);
 
-                // Unobserve after animating (animate once)
-                observer.unobserve(element);
+                revealObserver.unobserve(entry.target);
             }
         });
     }, observerOptions);
 
-    // Observe all elements with animation attributes
-    const animatedElements = document.querySelectorAll('[data-animate="fade-in"], [data-animate="fade-up"]');
-    animatedElements.forEach(el => observer.observe(el));
+    revealElements.forEach(element => {
+        revealObserver.observe(element);
+    });
+}
 
+// ============================================
+// 3. PARALLAX SCROLL EFFECTS
+// ============================================
 
-    // ============================================
-    // 3. EMAIL GLITCH EFFECT SETUP
-    // ============================================
+function initParallax() {
+    let ticking = false;
 
-    const emailLink = document.querySelector('.email-link[data-animate="glitch"]');
-    if (emailLink) {
-        const emailText = emailLink.textContent;
-        emailLink.setAttribute('data-text', emailText);
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                handleParallax();
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+}
+
+function handleParallax() {
+    const scrolled = window.pageYOffset;
+
+    // Parallax on hero
+    const hero = document.querySelector('.hero-content');
+    if (hero) {
+        const heroRect = hero.getBoundingClientRect();
+        if (heroRect.top < window.innerHeight && heroRect.bottom > 0) {
+            const heroOffset = scrolled * 0.3;
+            hero.style.transform = `translateY(${heroOffset}px)`;
+            hero.style.opacity = 1 - (scrolled / window.innerHeight) * 0.5;
+        }
     }
 
+    // Subtle parallax on sections
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+            const scrollPercent = (window.innerHeight - rect.top) / window.innerHeight;
+            const offset = (scrollPercent - 0.5) * 20;
+            section.style.transform = `translateY(${-offset}px)`;
+        }
+    });
+}
 
-    // ============================================
-    // 4. SMOOTH SCROLL FOR NAVIGATION
-    // ============================================
+// ============================================
+// 4. SMOOTH SCROLL NAVIGATION
+// ============================================
 
-    const navLinks = document.querySelectorAll('.nav a[href^="#"]');
+function initSmoothScroll() {
+    const navLinks = document.querySelectorAll('a[href^="#"]');
 
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
 
             const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
+            if (targetId === '#hero' || targetId === '#') {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+                return;
+            }
 
+            const targetSection = document.querySelector(targetId);
             if (targetSection) {
                 const navHeight = document.querySelector('.nav').offsetHeight;
-                const targetPosition = targetSection.offsetTop - navHeight;
+                const targetPosition = targetSection.offsetTop - navHeight - 20;
 
                 window.scrollTo({
                     top: targetPosition,
@@ -122,156 +123,193 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+}
 
+// ============================================
+// 5. NAVIGATION HIDE/SHOW ON SCROLL
+// ============================================
 
-    // ============================================
-    // 5. CUSTOM CURSOR (OPTIONAL ENHANCEMENT)
-    // ============================================
+function initNavBehavior() {
+    let lastScroll = 0;
+    const nav = document.querySelector('.nav');
 
-    // Uncomment below to add a custom cursor effect
-    /*
-    const cursor = document.createElement('div');
-    cursor.className = 'custom-cursor';
-    document.body.appendChild(cursor);
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+
+        if (currentScroll <= 0) {
+            nav.style.transform = 'translateY(0)';
+            return;
+        }
+
+        if (currentScroll > lastScroll && currentScroll > 100) {
+            // Scrolling down
+            nav.style.transform = 'translateY(-100%)';
+        } else {
+            // Scrolling up
+            nav.style.transform = 'translateY(0)';
+        }
+
+        lastScroll = currentScroll;
+    });
+}
+
+// ============================================
+// 6. CARD HOVER ENHANCEMENTS
+// ============================================
+
+function initCardEnhancements() {
+    const cards = document.querySelectorAll('.project-card, .content-card');
+
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease';
+        });
+
+        card.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const percentX = (x - centerX) / centerX;
+            const percentY = (y - centerY) / centerY;
+
+            // Subtle tilt on hover
+            const tiltX = percentY * 2;
+            const tiltY = percentX * -2;
+
+            this.style.transform = `translateY(-5px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) rotateX(0deg) rotateY(0deg)';
+        });
+    });
+}
+
+// ============================================
+// 7. BUTTON SPRING ANIMATION
+// ============================================
+
+function initButtonSpring() {
+    const buttons = document.querySelectorAll('.cta-button');
+
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease';
+        });
+
+        button.addEventListener('mouseleave', function() {
+            this.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease';
+        });
+    });
+}
+
+// ============================================
+// 8. MESH GRADIENT INTERACTIVE MOVEMENT
+// ============================================
+
+function initMeshInteraction() {
+    const mesh = document.querySelector('.mesh-gradient');
+    let mouseX = 0;
+    let mouseY = 0;
 
     document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
+        mouseX = (e.clientX / window.innerWidth) * 100;
+        mouseY = (e.clientY / window.innerHeight) * 100;
     });
 
-    // Add cursor hover effect on links
-    const interactiveElements = document.querySelectorAll('a, button');
-    interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-        el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-    });
-    */
-
-
-    // ============================================
-    // 6. TEXT SCRAMBLE EFFECT (OPTIONAL)
-    // ============================================
-
-    // Uncomment to add scramble effect to section titles
-    /*
-    class TextScramble {
-        constructor(el) {
-            this.el = el;
-            this.chars = '!<>-_\\/[]{}—=+*^?#________';
-            this.update = this.update.bind(this);
+    function updateMesh() {
+        if (mesh) {
+            const offsetX = mouseX * 0.1;
+            const offsetY = mouseY * 0.1;
+            mesh.style.backgroundPosition = `${offsetX}% ${offsetY}%`;
         }
-
-        setText(newText) {
-            const oldText = this.el.innerText;
-            const length = Math.max(oldText.length, newText.length);
-            const promise = new Promise((resolve) => this.resolve = resolve);
-            this.queue = [];
-
-            for (let i = 0; i < length; i++) {
-                const from = oldText[i] || '';
-                const to = newText[i] || '';
-                const start = Math.floor(Math.random() * 40);
-                const end = start + Math.floor(Math.random() * 40);
-                this.queue.push({ from, to, start, end });
-            }
-
-            cancelAnimationFrame(this.frameRequest);
-            this.frame = 0;
-            this.update();
-            return promise;
-        }
-
-        update() {
-            let output = '';
-            let complete = 0;
-
-            for (let i = 0, n = this.queue.length; i < n; i++) {
-                let { from, to, start, end, char } = this.queue[i];
-
-                if (this.frame >= end) {
-                    complete++;
-                    output += to;
-                } else if (this.frame >= start) {
-                    if (!char || Math.random() < 0.28) {
-                        char = this.randomChar();
-                        this.queue[i].char = char;
-                    }
-                    output += char;
-                } else {
-                    output += from;
-                }
-            }
-
-            this.el.innerHTML = output;
-
-            if (complete === this.queue.length) {
-                this.resolve();
-            } else {
-                this.frameRequest = requestAnimationFrame(this.update);
-                this.frame++;
-            }
-        }
-
-        randomChar() {
-            return this.chars[Math.floor(Math.random() * this.chars.length)];
-        }
+        requestAnimationFrame(updateMesh);
     }
 
-    // Apply scramble to section titles on scroll
-    const sectionTitles = document.querySelectorAll('.section-title');
-    const scrambleObserver = new IntersectionObserver((entries) => {
+    updateMesh();
+}
+
+// ============================================
+// 9. LAZY LOAD OPTIMIZATION
+// ============================================
+
+function initLazyLoad() {
+    // Prepare for images when added
+    const images = document.querySelectorAll('img[data-src]');
+
+    const imageObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                const fx = new TextScramble(entry.target);
-                fx.setText(entry.target.textContent);
-                scrambleObserver.unobserve(entry.target);
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+                imageObserver.unobserve(img);
             }
         });
-    }, { threshold: 0.5 });
+    });
 
-    sectionTitles.forEach(title => scrambleObserver.observe(title));
-    */
+    images.forEach(img => imageObserver.observe(img));
+}
 
+// ============================================
+// 10. INITIALIZE ALL
+// ============================================
 
-    // ============================================
-    // 7. PERFORMANCE: REDUCE MOTION PREFERENCE
-    // ============================================
+document.addEventListener('DOMContentLoaded', () => {
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Respect user's reduced motion preferences
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-    if (prefersReducedMotion.matches) {
-        // Disable animations for accessibility
-        document.querySelectorAll('[data-animate]').forEach(el => {
-            el.classList.add('animated');
-            el.style.animation = 'none';
-            el.style.opacity = '1';
-            el.style.transform = 'none';
-        });
-
-        document.querySelectorAll('.char').forEach(char => {
-            char.style.animation = 'none';
-            char.style.opacity = '1';
-            char.style.transform = 'none';
+    if (!prefersReducedMotion) {
+        // Initialize all animations and interactions
+        initPageLoadAnimations();
+        initCurtainReveal();
+        initParallax();
+        initNavBehavior();
+        initCardEnhancements();
+        initButtonSpring();
+        initMeshInteraction();
+    } else {
+        // For users who prefer reduced motion, still show content
+        const animatedElements = document.querySelectorAll('.animate-on-load, .reveal-curtain');
+        animatedElements.forEach(element => {
+            element.classList.add('loaded', 'revealed');
+            element.style.opacity = '1';
+            element.style.transform = 'none';
         });
     }
 
+    // Initialize smooth scroll (works regardless of motion preference)
+    initSmoothScroll();
+    initLazyLoad();
 
     // Console signature
-    console.log('%c Vyacheslav ', 'background: #000; color: #fff; padding: 4px 8px; font-family: monospace;');
-    console.log('%c AI Product Manager ', 'background: #fff; color: #000; padding: 4px 8px; font-family: monospace; border: 1px solid #000;');
-
+    console.log('%c VP ', 'background: #000; color: #fff; padding: 12px 20px; font-family: monospace; font-size: 20px; font-weight: bold;');
+    console.log('%c Vyacheslav Plotnikov — AI Product Manager ', 'background: #fff; color: #000; padding: 8px 16px; font-family: monospace; border: 1px solid #000;');
 });
 
-
 // ============================================
-// 8. PAGE LOAD COMPLETE
+// 11. PERFORMANCE MONITORING
 // ============================================
 
-window.addEventListener('load', function() {
-    // Remove any loading states
-    document.body.classList.add('loaded');
+// Pause animations when page is hidden
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        document.body.style.animationPlayState = 'paused';
+    } else {
+        document.body.style.animationPlayState = 'running';
+    }
+});
 
-    // Optional: Add page transition
-    document.body.style.opacity = '1';
+// Handle window resize
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        // Recalculate any position-dependent elements
+        handleParallax();
+    }, 250);
 });
