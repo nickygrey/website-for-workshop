@@ -126,7 +126,21 @@ function initSmoothScroll() {
 }
 
 // ============================================
-// 5. NAVIGATION HIDE/SHOW ON SCROLL
+// 5. SCROLL PROGRESS INDICATOR
+// ============================================
+
+function initScrollProgress() {
+    const progressBar = document.querySelector('.scroll-progress');
+
+    window.addEventListener('scroll', () => {
+        const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (window.pageYOffset / windowHeight) * 100;
+        progressBar.style.width = scrolled + '%';
+    });
+}
+
+// ============================================
+// 6. NAVIGATION HIDE/SHOW ON SCROLL
 // ============================================
 
 function initNavBehavior() {
@@ -154,7 +168,7 @@ function initNavBehavior() {
 }
 
 // ============================================
-// 6. CARD HOVER ENHANCEMENTS
+// 7. CARD HOVER ENHANCEMENTS
 // ============================================
 
 function initCardEnhancements() {
@@ -190,7 +204,7 @@ function initCardEnhancements() {
 }
 
 // ============================================
-// 7. BUTTON SPRING ANIMATION
+// 8. BUTTON SPRING ANIMATION
 // ============================================
 
 function initButtonSpring() {
@@ -208,7 +222,7 @@ function initButtonSpring() {
 }
 
 // ============================================
-// 8. MESH GRADIENT INTERACTIVE MOVEMENT
+// 9. MESH GRADIENT INTERACTIVE MOVEMENT
 // ============================================
 
 function initMeshInteraction() {
@@ -234,7 +248,340 @@ function initMeshInteraction() {
 }
 
 // ============================================
-// 9. LAZY LOAD OPTIMIZATION
+// 10. ANIMATED COUNTER NUMBERS
+// ============================================
+
+function initCounterAnimation() {
+    const counters = document.querySelectorAll('.metric-number');
+    const duration = 2000; // 2 seconds
+
+    const animateCounter = (counter) => {
+        const target = counter.textContent.trim();
+
+        // Handle special cases
+        if (target === '∞') {
+            // Animate infinity symbol with rotation
+            counter.style.display = 'inline-block';
+            counter.style.animation = 'infinityPulse 2s ease-in-out';
+            return;
+        }
+
+        // Extract number and suffix
+        const hasPlus = target.includes('+');
+        const numericValue = parseInt(target.replace(/[^0-9]/g, ''));
+
+        if (isNaN(numericValue)) return;
+
+        const startTime = performance.now();
+        const suffix = hasPlus ? '+' : '';
+
+        const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Easing function for smooth animation
+            const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+            const current = Math.floor(easeOutQuart * numericValue);
+
+            counter.textContent = current + suffix;
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                counter.textContent = target; // Ensure final value is exact
+            }
+        };
+
+        requestAnimationFrame(animate);
+    };
+
+    const observerOptions = {
+        threshold: 0.5,
+        rootMargin: '0px'
+    };
+
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !entry.target.dataset.animated) {
+                entry.target.dataset.animated = 'true';
+                setTimeout(() => animateCounter(entry.target), 200);
+                counterObserver.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    counters.forEach(counter => counterObserver.observe(counter));
+}
+
+// ============================================
+// 11. NEURAL NETWORK VISUALIZATION
+// ============================================
+
+function initNeuralNetwork() {
+    const canvas = document.getElementById('neuralNetwork');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    // Configuration
+    const config = {
+        nodeCount: 50,
+        connectionDistance: 250,
+        mouseInfluence: 180,
+        nodeSpeed: 0.8,
+        minNodeSize: 2,
+        maxNodeSize: 5,
+        connectionOpacity: 0.2,
+        particleCount: 15
+    };
+
+    let mouse = { x: null, y: null, radius: config.mouseInfluence };
+    let nodes = [];
+    let particles = [];
+    let time = 0;
+
+    // Node class with pulsing animation
+    class Node {
+        constructor() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.vx = (Math.random() - 0.5) * config.nodeSpeed;
+            this.vy = (Math.random() - 0.5) * config.nodeSpeed;
+            this.baseRadius = config.minNodeSize + Math.random() * (config.maxNodeSize - config.minNodeSize);
+            this.radius = this.baseRadius;
+            this.pulseOffset = Math.random() * Math.PI * 2;
+            this.pulseSpeed = 0.02 + Math.random() * 0.02;
+            this.brightness = 0.5 + Math.random() * 0.5;
+        }
+
+        update() {
+            // Bounce off walls with energy
+            if (this.x < 0 || this.x > width) {
+                this.vx *= -1;
+                this.x = Math.max(0, Math.min(width, this.x));
+            }
+            if (this.y < 0 || this.y > height) {
+                this.vy *= -1;
+                this.y = Math.max(0, Math.min(height, this.y));
+            }
+
+            // Mouse interaction - stronger repulsion
+            if (mouse.x && mouse.y) {
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < mouse.radius) {
+                    const force = (mouse.radius - distance) / mouse.radius;
+                    const angle = Math.atan2(dy, dx);
+                    this.vx -= Math.cos(angle) * force * 0.3;
+                    this.vy -= Math.sin(angle) * force * 0.3;
+                }
+            }
+
+            // Apply velocity with less damping for more movement
+            this.x += this.vx;
+            this.y += this.vy;
+            this.vx *= 0.98;
+            this.vy *= 0.98;
+
+            // Add some random jitter for organic movement
+            this.vx += (Math.random() - 0.5) * 0.02;
+            this.vy += (Math.random() - 0.5) * 0.02;
+
+            // Limit velocity
+            const maxSpeed = 2;
+            const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+            if (speed > maxSpeed) {
+                this.vx = (this.vx / speed) * maxSpeed;
+                this.vy = (this.vy / speed) * maxSpeed;
+            }
+
+            // Pulsing animation
+            this.radius = this.baseRadius + Math.sin(time * this.pulseSpeed + this.pulseOffset) * 0.5;
+        }
+
+        draw() {
+            // Main node with enhanced glow
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 102, 255, ${this.brightness})`;
+            ctx.fill();
+
+            // Multi-layer glow effect
+            const gradient1 = ctx.createRadialGradient(
+                this.x, this.y, 0,
+                this.x, this.y, this.radius * 4
+            );
+            gradient1.addColorStop(0, `rgba(0, 102, 255, ${0.4 * this.brightness})`);
+            gradient1.addColorStop(0.5, `rgba(0, 102, 255, ${0.2 * this.brightness})`);
+            gradient1.addColorStop(1, 'rgba(0, 102, 255, 0)');
+
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius * 4, 0, Math.PI * 2);
+            ctx.fillStyle = gradient1;
+            ctx.fill();
+
+            // Outer glow
+            const gradient2 = ctx.createRadialGradient(
+                this.x, this.y, 0,
+                this.x, this.y, this.radius * 8
+            );
+            gradient2.addColorStop(0, `rgba(0, 153, 255, ${0.15 * this.brightness})`);
+            gradient2.addColorStop(1, 'rgba(0, 153, 255, 0)');
+
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius * 8, 0, Math.PI * 2);
+            ctx.fillStyle = gradient2;
+            ctx.fill();
+        }
+    }
+
+    // Data particle that flows along connections
+    class DataParticle {
+        constructor() {
+            this.reset();
+        }
+
+        reset() {
+            if (nodes.length > 1) {
+                this.startNode = nodes[Math.floor(Math.random() * nodes.length)];
+                this.endNode = nodes[Math.floor(Math.random() * nodes.length)];
+                this.progress = 0;
+                this.speed = 0.005 + Math.random() * 0.01;
+                this.size = 1 + Math.random() * 2;
+                this.brightness = 0.5 + Math.random() * 0.5;
+            }
+        }
+
+        update() {
+            this.progress += this.speed;
+            if (this.progress >= 1) {
+                this.reset();
+            }
+        }
+
+        draw() {
+            if (!this.startNode || !this.endNode) return;
+
+            const x = this.startNode.x + (this.endNode.x - this.startNode.x) * this.progress;
+            const y = this.startNode.y + (this.endNode.y - this.startNode.y) * this.progress;
+
+            // Particle with trail effect
+            ctx.beginPath();
+            ctx.arc(x, y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 255, 255, ${this.brightness})`;
+            ctx.fill();
+
+            // Glow
+            const gradient = ctx.createRadialGradient(x, y, 0, x, y, this.size * 3);
+            gradient.addColorStop(0, `rgba(0, 255, 255, ${0.6 * this.brightness})`);
+            gradient.addColorStop(1, 'rgba(0, 255, 255, 0)');
+            ctx.beginPath();
+            ctx.arc(x, y, this.size * 3, 0, Math.PI * 2);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+        }
+    }
+
+    // Initialize nodes and particles
+    function initNodes() {
+        nodes = [];
+        for (let i = 0; i < config.nodeCount; i++) {
+            nodes.push(new Node());
+        }
+
+        particles = [];
+        for (let i = 0; i < config.particleCount; i++) {
+            particles.push(new DataParticle());
+        }
+    }
+
+    // Draw enhanced connections with animation
+    function drawConnections() {
+        for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+                const dx = nodes[i].x - nodes[j].x;
+                const dy = nodes[i].y - nodes[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < config.connectionDistance) {
+                    const opacity = (1 - distance / config.connectionDistance) * config.connectionOpacity;
+
+                    // Animated pulse effect on connections
+                    const pulseOpacity = opacity * (1 + Math.sin(time * 0.002 + i * 0.1) * 0.3);
+
+                    // Draw connection line
+                    ctx.beginPath();
+                    ctx.moveTo(nodes[i].x, nodes[i].y);
+                    ctx.lineTo(nodes[j].x, nodes[j].y);
+                    ctx.strokeStyle = `rgba(0, 102, 255, ${pulseOpacity})`;
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+
+                    // Draw subtle glow on connections
+                    ctx.beginPath();
+                    ctx.moveTo(nodes[i].x, nodes[i].y);
+                    ctx.lineTo(nodes[j].x, nodes[j].y);
+                    ctx.strokeStyle = `rgba(0, 153, 255, ${pulseOpacity * 0.3})`;
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+
+    // Animation loop with time tracking
+    function animate() {
+        time++;
+        ctx.clearRect(0, 0, width, height);
+
+        // Draw connections first (background layer)
+        drawConnections();
+
+        // Update and draw data particles
+        particles.forEach(particle => {
+            particle.update();
+            particle.draw();
+        });
+
+        // Update and draw nodes (foreground layer)
+        nodes.forEach(node => {
+            node.update();
+            node.draw();
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    // Mouse tracking
+    canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+        mouse.x = null;
+        mouse.y = null;
+    });
+
+    // Handle resize
+    window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        initNodes();
+    });
+
+    // Start
+    initNodes();
+    animate();
+}
+
+// ============================================
+// 12. LAZY LOAD OPTIMIZATION
 // ============================================
 
 function initLazyLoad() {
@@ -256,7 +603,7 @@ function initLazyLoad() {
 }
 
 // ============================================
-// 10. INITIALIZE ALL
+// 13. INITIALIZE ALL
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -268,10 +615,13 @@ document.addEventListener('DOMContentLoaded', () => {
         initPageLoadAnimations();
         initCurtainReveal();
         initParallax();
+        initScrollProgress();
         initNavBehavior();
         initCardEnhancements();
         initButtonSpring();
         initMeshInteraction();
+        initCounterAnimation();
+        initNeuralNetwork();
     } else {
         // For users who prefer reduced motion, still show content
         const animatedElements = document.querySelectorAll('.animate-on-load, .reveal-curtain');
@@ -292,7 +642,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================
-// 11. PERFORMANCE MONITORING
+// 14. PERFORMANCE MONITORING
 // ============================================
 
 // Pause animations when page is hidden

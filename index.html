@@ -14,12 +14,16 @@
     <!-- Animated Mesh Gradient Background -->
     <div class="mesh-gradient"></div>
 
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress"></div>
+
     <!-- Navigation -->
     <nav class="nav">
         <div class="nav-container">
             <a href="#hero" class="nav-logo">VP</a>
             <div class="nav-links">
                 <a href="#about">About</a>
+                <a href="#skills">Skills</a>
                 <a href="#work">Work</a>
                 <a href="#contact">Contact</a>
             </div>
@@ -28,6 +32,7 @@
 
     <!-- Hero Section -->
     <section id="hero" class="hero">
+        <canvas id="neuralNetwork" class="neural-network-canvas"></canvas>
         <div class="hero-content">
             <h1 class="hero-title animate-on-load">
                 Building intelligent products<br>
@@ -54,21 +59,110 @@
         </div>
     </section>
 
+    <!-- Skills Section -->
+    <section id="skills" class="section skills">
+        <div class="container">
+            <h2 class="section-title reveal-curtain">Skills & Expertise</h2>
+            <div class="skills-grid">
+                <div class="skill-category reveal-curtain">
+                    <h3 class="skill-category-title">Product Strategy</h3>
+                    <ul class="skill-list">
+                        <li>AI/ML Product Development</li>
+                        <li>Technical Roadmapping</li>
+                        <li>System Architecture Design</li>
+                        <li>Cross-functional Leadership</li>
+                    </ul>
+                </div>
+                <div class="skill-category reveal-curtain">
+                    <h3 class="skill-category-title">Technical Stack</h3>
+                    <ul class="skill-list">
+                        <li>Python / TensorFlow / PyTorch</li>
+                        <li>LLMs & Conversational AI</li>
+                        <li>API Design & Integration</li>
+                        <li>Cloud Infrastructure (AWS/GCP)</li>
+                    </ul>
+                </div>
+                <div class="skill-category reveal-curtain">
+                    <h3 class="skill-category-title">Methodologies</h3>
+                    <ul class="skill-list">
+                        <li>Agile/Scrum Practices</li>
+                        <li>User-Centered Design</li>
+                        <li>Data-Driven Decision Making</li>
+                        <li>Rapid Prototyping</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- VP Watermark -->
+        <div class="vp-watermark">VP</div>
+    </section>
+
+    <!-- Impact Metrics Section -->
+    <section class="section metrics">
+        <div class="container">
+            <div class="metrics-grid">
+                <div class="metric-card reveal-curtain">
+                    <div class="metric-number">4</div>
+                    <div class="metric-label">Python, Swift, HTML, JS</div>
+                </div>
+                <div class="metric-card reveal-curtain">
+                    <div class="metric-number">15+</div>
+                    <div class="metric-label">Personal & Professional Work</div>
+                </div>
+                <div class="metric-card reveal-curtain">
+                    <div class="metric-number">∞</div>
+                    <div class="metric-label">Automation Solutions</div>
+                </div>
+                <div class="metric-card reveal-curtain">
+                    <div class="metric-number">1</div>
+                    <div class="metric-label">Life-Changing Project: Momentum</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Work Section -->
     <section id="work" class="section work">
         <div class="container">
             <h2 class="section-title reveal-curtain">Selected Work</h2>
             <div class="work-grid">
-                <!-- Project cards will be added here -->
                 <div class="project-card reveal-curtain">
-                    <div class="project-content">
-                        <span class="project-label">Coming Soon</span>
-                        <h3 class="project-title">AI Product Case Studies</h3>
-                        <p class="project-description">Detailed breakdowns of intelligent systems I've built and shipped.</p>
+                    <span class="project-label">2026 — In Progress</span>
+                    <div class="project-image-placeholder">Project Visual</div>
+                    <h3 class="project-title">Momentum</h3>
+                    <p class="project-description">A learning habit tracker for iOS. Small steps every day, Forza Horizon-style rewards: everything earns something — XP, streaks, trophies, surprise bonuses.</p>
+                    <div class="project-tags">
+                        <span class="tag">iOS</span>
+                        <span class="tag">Gamification</span>
+                        <span class="tag">Habit Tracking</span>
+                    </div>
+                </div>
+                <div class="project-card reveal-curtain">
+                    <span class="project-label">2024</span>
+                    <div class="project-image-placeholder">Project Visual</div>
+                    <h3 class="project-title">Advanced Blockchain.py</h3>
+                    <p class="project-description">A full-featured cryptocurrency implementation with ECDSA wallets, UTXO transaction model, Proof of Work mining, Merkle trees, and a REST API.</p>
+                    <div class="project-tags">
+                        <span class="tag">Blockchain</span>
+                        <span class="tag">Cryptography</span>
+                        <span class="tag">Python</span>
+                    </div>
+                </div>
+                <div class="project-card reveal-curtain">
+                    <span class="project-label">2025</span>
+                    <div class="project-image-placeholder">Project Visual</div>
+                    <h3 class="project-title">Deadline Manager</h3>
+                    <p class="project-description">Automated deadline tracking system that connects Google Forms, Google Calendar, and Google Sheets. Creates calendar events, logs to dashboard, and sends daily email reminders for upcoming and overdue deadlines.</p>
+                    <div class="project-tags">
+                        <span class="tag">Automation</span>
+                        <span class="tag">Google APIs</span>
+                        <span class="tag">Productivity</span>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- VP Watermark -->
+        <div class="vp-watermark">VP</div>
     </section>
 
     <!-- Contact Section -->
@@ -79,7 +173,7 @@
                 <p class="contact-text">
                     Available for AI product collaboration, consulting, and speaking engagements.
                 </p>
-                <a href="mailto:your.email@example.com" class="cta-button">your.email@example.com</a>
+                <a href="mailto:ussseryizis@gmail.com" class="cta-button">ussseryizis@gmail.com</a>
             </div>
         </div>
     </section>
@@ -88,6 +182,10 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-brand">VP</div>
+            <div class="footer-social">
+                <a href="https://www.linkedin.com/in/vyacheslav-plotnikov-b5081828a" target="_blank" rel="noopener">LinkedIn</a>
+                <a href="https://github.com/nickygrey" target="_blank" rel="noopener">GitHub</a>
+            </div>
             <p>&copy; 2026 Vyacheslav Plotnikov. All rights reserved.</p>
         </div>
     </footer>
