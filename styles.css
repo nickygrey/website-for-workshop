@@ -1,0 +1,409 @@
+/* ===================================
+   BRUTALIST PORTFOLIO STYLES
+   Pure Monochrome / Monospace
+   =================================== */
+
+/* Reset & Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --black: #000000;
+    --white: #ffffff;
+    --font-mono: 'Courier New', Courier, 'Monaco', monospace;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--black);
+    background-color: var(--white);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Container */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+/* Navigation */
+.nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 30px 40px;
+    background-color: var(--white);
+    border-bottom: 1px solid var(--black);
+    z-index: 1000;
+    display: flex;
+    gap: 30px;
+}
+
+.nav a {
+    color: var(--black);
+    text-decoration: none;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.nav a:hover {
+    text-decoration: underline;
+}
+
+/* Hero Section */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 40px;
+    margin-top: 80px;
+    overflow: hidden;
+}
+
+.hero-title {
+    font-size: 64px;
+    line-height: 1.2;
+    font-weight: 400;
+    margin-bottom: 40px;
+    letter-spacing: -0.02em;
+}
+
+.hero-title .line {
+    display: block;
+    overflow: hidden;
+}
+
+.hero-title .line .char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(100%);
+}
+
+.hero-subtitle {
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0;
+}
+
+/* Section */
+.section {
+    padding: 120px 0;
+    border-top: 1px solid var(--black);
+}
+
+.section-title {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 60px;
+    font-weight: 400;
+}
+
+/* About Section */
+.about-content {
+    max-width: 700px;
+}
+
+.about-content p {
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+.about-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Work Section */
+.work-empty {
+    font-size: 18px;
+    line-height: 1.8;
+    opacity: 0;
+    color: var(--black);
+}
+
+.project {
+    margin-bottom: 120px;
+    padding-bottom: 120px;
+    border-bottom: 1px solid var(--black);
+}
+
+.project:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.project-meta {
+    display: flex;
+    gap: 20px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+}
+
+.project-title {
+    font-size: 32px;
+    line-height: 1.3;
+    font-weight: 400;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+}
+
+.project-description {
+    font-size: 16px;
+    line-height: 1.8;
+    max-width: 700px;
+    margin-bottom: 40px;
+}
+
+.project-image-placeholder {
+    width: 100%;
+    height: 500px;
+    border: 1px solid var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--black);
+    background-color: var(--white);
+}
+
+/* Contact Section */
+.contact-text {
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 30px;
+    max-width: 600px;
+}
+
+.email-link {
+    font-size: 24px;
+    color: var(--black);
+    text-decoration: none;
+    display: inline-block;
+}
+
+.email-link:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+.footer {
+    padding: 60px 40px;
+    border-top: 1px solid var(--black);
+    text-align: center;
+}
+
+.footer p {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* ===================================
+   KINETIC TYPOGRAPHY ANIMATIONS
+   =================================== */
+
+/* Initial hidden states for animated elements */
+[data-animate="fade-in"],
+[data-animate="fade-up"] {
+    opacity: 0;
+}
+
+[data-animate="fade-up"] {
+    transform: translateY(30px);
+}
+
+/* Animation keyframes */
+@keyframes charReveal {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes glitchSkew {
+    0% { transform: skewX(0deg); }
+    10% { transform: skewX(-2deg); }
+    20% { transform: skewX(2deg); }
+    30% { transform: skewX(-2deg); }
+    40% { transform: skewX(2deg); }
+    50% { transform: skewX(0deg); }
+    100% { transform: skewX(0deg); }
+}
+
+@keyframes glitchClip {
+    0% { clip-path: inset(0 0 0 0); }
+    5% { clip-path: inset(10% 0 85% 0); }
+    10% { clip-path: inset(80% 0 15% 0); }
+    15% { clip-path: inset(40% 0 50% 0); }
+    20% { clip-path: inset(60% 0 30% 0); }
+    25% { clip-path: inset(0 0 0 0); }
+    100% { clip-path: inset(0 0 0 0); }
+}
+
+/* Animated state classes (added by JavaScript) */
+.hero-title .line .char.animate {
+    animation: charReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-animate="fade-in"].animated {
+    animation: fadeIn 1s ease-out forwards;
+}
+
+[data-animate="fade-up"].animated {
+    animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Glitch effect on hover */
+[data-animate="glitch"]:hover {
+    animation: glitchSkew 0.3s ease-in-out;
+}
+
+[data-animate="glitch"]::before,
+[data-animate="glitch"]::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    opacity: 0;
+}
+
+[data-animate="glitch"]:hover::before {
+    color: var(--black);
+    animation: glitchClip 0.3s steps(2) infinite;
+    clip-path: inset(0 0 0 0);
+    opacity: 0.8;
+    transform: translateX(-2px);
+}
+
+[data-animate="glitch"]:hover::after {
+    color: var(--black);
+    animation: glitchClip 0.3s steps(2) infinite reverse;
+    clip-path: inset(0 0 0 0);
+    opacity: 0.8;
+    transform: translateX(2px);
+}
+
+/* Email link glitch setup */
+.email-link {
+    position: relative;
+}
+
+/* Scroll reveal utilities */
+.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 20px;
+    }
+
+    .nav {
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .hero {
+        padding: 0 20px;
+        margin-top: 60px;
+    }
+
+    .hero-title {
+        font-size: 36px;
+    }
+
+    .hero-subtitle {
+        font-size: 14px;
+    }
+
+    .section {
+        padding: 80px 0;
+    }
+
+    .section-title {
+        margin-bottom: 40px;
+    }
+
+    .about-content p {
+        font-size: 16px;
+    }
+
+    .project {
+        margin-bottom: 80px;
+        padding-bottom: 80px;
+    }
+
+    .project-title {
+        font-size: 24px;
+    }
+
+    .project-description {
+        font-size: 14px;
+    }
+
+    .project-image-placeholder {
+        height: 300px;
+    }
+
+    .contact-text {
+        font-size: 16px;
+    }
+
+    .email-link {
+        font-size: 18px;
+    }
+
+    .footer {
+        padding: 40px 20px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .nav {
+        position: relative;
+        border: none;
+    }
+
+    .section {
+        page-break-inside: avoid;
+    }
+}
