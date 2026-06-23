@@ -204,21 +204,45 @@ function initCardEnhancements() {
 }
 
 // ============================================
-// 8. BUTTON SPRING ANIMATION
+// 8. MAGNETIC BUTTON EFFECT
 // ============================================
 
-function initButtonSpring() {
-    const buttons = document.querySelectorAll('.cta-button');
+function initMagneticButtons() {
+    const buttons = document.querySelectorAll('.cta-button, .nav-logo, .nav-links a, .footer-social a');
+    const magneticStrength = 0.35; // How much the element moves (0-1)
+    const magneticRadius = 80; // Pixel radius of magnetic effect
 
     buttons.forEach(button => {
-        button.addEventListener('mouseenter', function() {
-            this.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease';
+        button.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+
+        button.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const deltaX = e.clientX - centerX;
+            const deltaY = e.clientY - centerY;
+
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+            if (distance < magneticRadius) {
+                const pull = (magneticRadius - distance) / magneticRadius;
+                const moveX = deltaX * magneticStrength * pull;
+                const moveY = deltaY * magneticStrength * pull;
+
+                this.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.02)`;
+            }
         });
 
         button.addEventListener('mouseleave', function() {
-            this.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease';
+            this.style.transform = 'translate(0, 0) scale(1)';
         });
     });
+}
+
+// Legacy alias
+function initButtonSpring() {
+    initMagneticButtons();
 }
 
 // ============================================
